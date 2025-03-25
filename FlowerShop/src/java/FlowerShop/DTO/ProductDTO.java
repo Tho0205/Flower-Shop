@@ -28,6 +28,9 @@ public class ProductDTO {
         this.image = image;
     }
 
+    public ProductDTO() {
+    }
+
     
 
     public int getProductId() {

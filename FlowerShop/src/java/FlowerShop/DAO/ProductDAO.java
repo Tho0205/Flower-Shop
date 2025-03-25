@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import FlowerShop.DTO.ProductDTO;
 import FlowerShop.Utils.DBUtils;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProductDAO {
     public List<ProductDTO> list(String keyword, int limit, int offset) {
@@ -128,8 +130,30 @@ public class ProductDAO {
     }
 
     public List<ProductDTO> SearchByKeyword(String keyword) {
-        
+        List<ProductDTO> list = new ArrayList<>();
+        String sql = "SELECT productId, productName, description, price, quantity, categoryId, image FROM Products WHERE productName LIKE ?";
+        try (Connection con = DBUtils.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ProductDTO product = new ProductDTO(
+                    rs.getInt("productId"),
+                    rs.getString("productName"),
+                    rs.getString("description"),
+                    rs.getDouble("price"),
+                    rs.getInt("quantity"),
+                    rs.getInt("categoryId"),
+                    rs.getString("image")
+                );
+                list.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
+
     
     public ProductDTO load(int productId)  {
         String sql = "SELECT productId, productName, description, price, quantity, categoryId, image FROM Products WHERE productId = ?";

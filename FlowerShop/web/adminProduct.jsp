@@ -50,13 +50,21 @@
         <jsp:include page="adminHeader.jsp" flush="true" />
         <div class="container">
             <h2 class="text-center">Product Management</h2>
-            <form action="AdminController" method="GET">
-                
-                <label for="name">Name: </label>
-                <input type="text" name="keyword" value="${param.keyword}">
+            <div style="display: flex; justify-content: flex-start; align-items: center;">
+                <form action="AdminController" method="GET" style="margin-right: 10px; display: flex; align-items: center;">
+                    <input type="hidden" name="action" value="search" />
+                    <label for="keyword" style="margin-right: 5px;">Name:</label>
+                    <input type="text" name="keyword" value="${param.keyword}" style="margin-right: 5px;" />
+                    <button type="submit">Search</button>
+                </form>  
+                <form action="AdminController" method="GET" style="display: flex; align-items: center;">
+                    <input type="hidden" name="action" value="create" />
+                    <button type="submit" class="btn btn-link">Create</button>
+                </form> 
+            </div>
 
-                <input type="submit" name="action" value="search" >
-            </form>
+
+                
             <div class="row">
                 <div class="col-md-12">
                     <table class="table table-bordered">
@@ -82,7 +90,7 @@
                             <td>
                                 <%
                                     String description = product.getDescription();
-                                    int maxLength = 100; // Số ký tự tối đa bạn muốn hiển thị
+                                    int maxLength = 100;
                                     if (description.length() > maxLength) {
                                         description = description.substring(0, maxLength) + "...";
                                     }
@@ -130,17 +138,20 @@
                             </td>
  
                             <td>
-                                <form action="" method="POST">
-                                    <input name="action" value="delete" type="hidden">
-                                    <input name="id" value="<%= product.getProductId() %>" type="hidden">
-                                    <input type="submit" value="Delete" class="action-btn">
-                                </form>
-                                <form action="" method="POST">
-                                    <input name="action" value="edit" type="hidden">
-                                    <input name="id" value="<%= product.getProductId() %>" type="hidden">
-                                    <input type="submit" value="Edit" class="action-btn">
-                                </form>
+                                <div style="display: flex; gap: 10px;">
+                                    <form action="AdminController" method="POST" style="margin: 0;">
+                                        <input name="action" value="delete" type="hidden">
+                                        <input name="productId" value="<%= product.getProductId() %>" type="hidden">
+                                        <input type="submit" value="Delete" class="btn btn-danger">
+                                    </form>
+                                    <form action="editProduct.jsp" method="POST" style="margin: 0;">
+                                        <input name="action" value="editProduct.jsp" type="hidden">
+                                        <input name="productId" value="<%= product.getProductId() %>" type="hidden">
+                                        <input type="submit" value="Edit" class="btn btn-info">
+                                    </form>
+                                </div>
                             </td>
+
                         </tr>
                         <%
                                 }
@@ -155,7 +166,7 @@
                     </table>
                 </div>
             </div>
-            <div>
+            <div>   
                 <div class="col-md-12 text-center">
                     <nav arial-label="Page navigation">
                         <ul class="pagination">

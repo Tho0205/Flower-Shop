@@ -63,6 +63,16 @@ public class AdminController extends HttpServlet {
             String keyword = request.getParameter("keyword");
             List<ProductDTO> productList = productDAO.SearchByKeyword(keyword);
             request.setAttribute("productListAll", productList);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("adminProduct.jsp");
+            dispatcher.forward(request, response);
+        }else if(action.equals("delete")){
+            int productId = Integer.parseInt(request.getParameter("productId"));
+            boolean result =  productDAO.delete(productId);
+            if (result) {
+                response.sendRedirect("AdminController?action=listProduct");
+            }
+        }else if(action.equals("edit")){
+            
         }
     }
 
